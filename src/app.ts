@@ -2,13 +2,15 @@ import express from "express";
 import bodyparser from "body-parser";
 
 import mongoose from "mongoose";
-import authRoutes from "./routes/auth.js";
-
+import authRoutes from "./routes/auth";
+import userRoutes from "./routes/users";
+// import user from "../models/user";
 const app = express();
 
 app.use(bodyparser.json());
 
 app.use("/auth", authRoutes);
+app.use("/profile", userRoutes);
 
 // app.use((error, req, res, next) => {
 //   console.log(error);
