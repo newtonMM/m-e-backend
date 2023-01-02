@@ -1,19 +1,22 @@
-import { validationResult } from "express-validator/check/index.js";
+import { validationResult } from "express-validator/check/index";
+import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import User from "../models/user.js";
+import User from "../models/user";
 
-export const signup = async (req, res, next) => {
+export const signup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error("Validation failed.");
-    error.statusCode = 422;
-    error.data = errors.array();
     throw error;
   }
   const email = req.body.email;
-  const name = req.body.name;
   const password = req.body.password;
+  const fullName = req.body.fullName;
   const phoneNo = req.body.phoneNo;
   const idNo = req.body.idNo;
   const role = req.body.role;
@@ -22,8 +25,8 @@ export const signup = async (req, res, next) => {
     const hashedpw = await bcrypt.hash(password, 12);
     const user = new User({
       email: email,
-      name: name,
       password: hashedpw,
+      fullName: fullName,
       phoneNo: phoneNo,
       idNo: idNo,
       role: role,
@@ -35,7 +38,11 @@ export const signup = async (req, res, next) => {
   }
 };
 
-export const login = async (req, res, next) => {
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const email = req.body.email;
   const password = req.body.password;
   let foundUser;
@@ -44,26 +51,26 @@ export const login = async (req, res, next) => {
     const user = await User.findOne({ email: email });
     if (!user) {
       const error = new Error("could not find user with that email address");
-      error.code = 401;
       throw error;
     }
     foundUser = user;
     const isEqual = await bcrypt.compare(password, user.password);
     if (!isEqual) {
       const error = new Error("password is wrong ");
-      error.code = 401;
       throw error;
     }
-    const token = await jwt.sign({
-      email: foundUser.email,
-      password: foundUser.password,
-    });
+    const token = await jwt.sign(
+      {
+        email: foundUser.email,
+        password: foundUser.password,
+        userId: foundUser._id.toString(),
+      },
+      "somesecret",
+      { expiresIn: "1h" }
+    );
 
     res.status(200).json({ token: token, userId: foundUser._id.toString() });
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-      next(err);
-    }
+  } catch (error) {
+    console.log(error);
   }
 };

@@ -1,8 +1,8 @@
 import express from "express";
-import { body } from "express-validator/check/index.js";
+import { body } from "express-validator/check/index";
 
-import User from "../models/user.js";
-import { login, signup } from "../controllers/auth.js";
+import User from "../models/user";
+import { login, signup } from "../controllers/auth";
 
 const router = express.Router();
 
@@ -21,7 +21,7 @@ router.put(
       })
       .normalizeEmail(),
     body("password").trim().isLength({ min: 5 }),
-    body("name").trim().not().isEmpty(),
+    body("fullName").trim().not().isEmpty(),
     body("phoneNo").trim().not().isEmpty(),
     body("idNo").trim().not().isEmpty(),
     body("role").trim().not().isEmpty(),
