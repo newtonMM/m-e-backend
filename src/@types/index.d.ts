@@ -1,5 +1,8 @@
-declare namespace Express {
-  export interface Request {
-    userId?: string;
+import * as express from "express";
+declare global {
+  namespace Express {
+    interface Request {
+      userId?: Record<string, any>;
+    }
   }
 }

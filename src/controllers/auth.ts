@@ -17,7 +17,6 @@ export const signup = async (
   const email = req.body.email;
   const password = req.body.password;
   const fullName = req.body.fullName;
-
   const phoneNo = req.body.phoneNo;
   const idNo = req.body.idNo;
   const role = req.body.role;

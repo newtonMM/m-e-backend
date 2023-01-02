@@ -1,12 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-interface jwtPayload {
-  email: string;
-  password: string;
-  userId: string;
-}
-
 const isAuth = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.get("Authorization");
   if (!authHeader) {
