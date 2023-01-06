@@ -8,7 +8,7 @@ export const createUser = async (
   next: NextFunction
 ) => {
   const email = req.body.email;
-  const name = req.body.name;
+  const fullName = req.body.fullName;
   const password = req.body.password;
   const phoneNo = req.body.phoneNo;
   const idNo = req.body.idNo;
@@ -18,7 +18,7 @@ export const createUser = async (
     const hashedpw = await bcrypt.hash(password, 12);
     const user = new User({
       email: email,
-      name: name,
+      fullName: fullName,
       password: hashedpw,
       phoneNo: phoneNo,
       idNo: idNo,
