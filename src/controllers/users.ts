@@ -1,114 +1,132 @@
 import User from "../models/user";
 import bcrypt from "bcryptjs";
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
+import { ReqResFunction } from "../types/common/ReqResFunction";
+import { IUser } from "../types/IUser";
 
-export const createUser = async (
+/**
+ * Create new user
+ * @param req Request Context
+ * @param res Response Context
+ */
+export const createUser: ReqResFunction = async (
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
-  const email = req.body.email;
-  const name = req.body.name;
-  const password = req.body.password;
-  const phoneNo = req.body.phoneNo;
-  const idNo = req.body.idNo;
-  const role = req.body.role;
+  const { email, name, password, phoneNo, idNo, role }: IUser = req.body;
 
   try {
     const hashedpw = await bcrypt.hash(password, 12);
+
     const user = new User({
-      email: email,
-      name: name,
+      email,
+      name,
       password: hashedpw,
-      phoneNo: phoneNo,
-      idNo: idNo,
-      role: role,
+      phoneNo,
+      idNo,
+      role,
     });
+
     const newUser = await user.save();
-    res.status(201).json({ message: "user created", newuser: newUser });
+    res.status(201).json({ message: "User created!", newuser: newUser });
   } catch (error) {
     console.log(error);
   }
 };
-export const getUsers = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+
+/**
+ * Get all users
+ * @param req Request Context
+ * @param res Response Context
+ */
+export const getUsers: ReqResFunction = async (req: Request, res: Response) => {
   try {
     const allUsers = await User.find();
 
     res
       .status(200)
-      .json({ message: "got all users successfully", users: allUsers });
+      .json({ message: "Retrieved all users successfully", users: allUsers });
   } catch (error) {
     console.log(error);
   }
 };
-export const getUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+
+/**
+ * Get user by id
+ * @param req Request Context
+ * @param res Response Context
+ */
+export const getUser: ReqResFunction = async (req: Request, res: Response) => {
   const { userId } = req.params;
+
   try {
     const user = await User.findById(userId);
+
     if (!user) {
-      console.log("user not found");
+      console.log("User not found!");
     }
 
-    res.status(200).json({ message: "got user successfully", user: user });
+    res
+      .status(200)
+      .json({ message: "Retrieved user successfully.", user: user });
   } catch (error) {
     console.log(error);
   }
 };
 
-export const updateUser = async (
+/**
+ * Update user
+ * @param req Request Context
+ * @param res Response Context
+ */
+export const updateUser: ReqResFunction = async (
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
   const { userId } = req.params;
-  const email = req.body.email;
-  const fullName = req.body.fullName;
-  let password = req.body.password;
-  const phoneNo = req.body.phoneNo;
-  const idNo = req.body.idNo;
-  const role = req.body.role;
+
+  const { email, fullName, phoneNo, idNo, role }: IUser = req.body;
+  let { password } = req.body;
+
   try {
     const user = await User.findById(userId);
     if (!user) {
-      console.log("user not found");
+      console.log("user not found!");
     }
     const isPwChanged = await bcrypt.compare(password, user!.password);
     if (isPwChanged) {
-      const newPw = await bcrypt.hash(password, 12);
-      password = newPw;
+      const newPassword = await bcrypt.hash(password, 12);
+      password = newPassword;
     }
+
     user!.email = email;
-    user!.fullName = fullName;
+    user!.fullName = fullName ?? "";
     user!.password = password;
     user!.phoneNo = phoneNo;
     user!.idNo = idNo;
     user!.role = role;
 
     const updatedUser = await user!.save();
-    res.status(201).json({ message: "user updated", user: updatedUser });
+    res.status(201).json({ message: "User updated.", user: updatedUser });
   } catch (error) {
     console.log(error);
   }
 };
 
-export const deleteUser = async (
+/**
+ * Delete user
+ * @param req Request Context
+ * @param res Response Context
+ */
+export const deleteUser: ReqResFunction = async (
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
   const { userId } = req.params;
 
   try {
     await User.findByIdAndRemove(userId);
-    res.status(200).json({ message: "user deleted successfully" });
+    res.status(200).json({ message: "User deleted successfully." });
   } catch (error) {
     console.log(error);
   }
