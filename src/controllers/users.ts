@@ -13,12 +13,15 @@ export const createUser: ReqResFunction = async (
   req: Request,
   res: Response
 ) => {
+
   const { email, name, password, phoneNo, idNo, role }: IUser = req.body;
+
 
   try {
     const hashedpw = await bcrypt.hash(password, 12);
 
     const user = new User({
+
       email,
       name,
       password: hashedpw,

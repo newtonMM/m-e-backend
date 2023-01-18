@@ -5,7 +5,9 @@ import mongoose from "mongoose";
 import authRoutes from "./routes/auth";
 import userRoutes from "./routes/users";
 import cropRoutes from "./routes/crop";
+import farmerRoutes from "./routes/farmer";
 // import user from "../models/user";
+
 const app = express();
 
 app.use(bodyparser.json());
@@ -23,6 +25,7 @@ app.use((req, res, next) => {
 app.use("/auth", authRoutes);
 app.use("/profile", userRoutes);
 app.use("/crop", cropRoutes);
+app.use("/farmer", farmerRoutes);
 
 // app.use((error, req, res, next) => {
 //   console.log(error);

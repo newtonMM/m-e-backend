@@ -8,7 +8,7 @@ import {
   getCrops,
   getCrop,
   deleteCrop,
-} from "../controllers/cropController";
+} from "../controllers/crop";
 
 const router = express.Router();
 
