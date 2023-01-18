@@ -38,7 +38,7 @@ export const createFarmer = async (
     const newFarmer = await farmer.save();
     res.status(201).json({
       message: "farmer created",
-      newfarmer: newFarmer,
+      newfarmer,
       farmerId: newFarmer._id,
     });
   } catch (error) {
