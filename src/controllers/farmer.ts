@@ -7,16 +7,19 @@ export const createFarmer = async (
   res: Response,
   next: NextFunction
 ) => {
-  const email = req.body.email;
-  const firstName = req.body.firstName;
-  const secondName = req.body.secondName;
-  const password = req.body.password;
-  const phoneNo = req.body.phoneNo;
-  const idNo = req.body.idNo;
-  const county = req.body.county;
-  const constituency = req.body.constituency;
-  const division = req.body.division;
-  const location = req.body.location;
+  const { 
+     email,
+     firstName,
+     secondName,
+     password,
+     phoneNo,
+     idNo,
+     county,
+     constituency,
+     division,
+     location
+     } = req.body;
+
 
   try {
     const hashedpw = await bcrypt.hash(password, 12);
