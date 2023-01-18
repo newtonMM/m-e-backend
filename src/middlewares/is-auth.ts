@@ -4,11 +4,8 @@ interface RequestWithUserId extends Request {
   userId?: Record<string, any>;
 }
 
-const isAuth = async (
-  req: RequestWithUserId,
-  res: Response,
-  next: NextFunction
-) => {
+const isAuth = async (req: RequestWithUserId, res: Response, next: NextFunction) => {
+
   const authHeader = req.get("Authorization");
   if (!authHeader) {
     const error = new Error("Not authorized");
