@@ -24,16 +24,16 @@ export const createFarmer = async (
   try {
     const hashedpw = await bcrypt.hash(password, 12);
     const farmer = new Farmer({
-      email: email,
-      firstName: firstName,
-      secondName: secondName,
+      email,
+      firstName,
+      secondName,
       password: hashedpw,
-      phoneNo: phoneNo,
-      idNo: idNo,
-      county: county,
-      constituency: constituency,
-      division: division,
-      location: location,
+      phoneNo,
+      idNo,
+      county,
+      constituency,
+      division,
+      location,
     });
     const newFarmer = await farmer.save();
     res.status(201).json({
